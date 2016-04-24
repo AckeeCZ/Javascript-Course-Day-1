@@ -107,7 +107,7 @@ var Course = (function(){
 				var ret;
 				try {
 					ret = func.apply(null, data.in);
-					if (ret === null) ret = "null";
+					// if (ret === null) ret = "null";
 				} catch (e) { if (typeof e == "string") ret = {throwed: e }; else throw e; }
 				self.postMessage(ret);
 			}
@@ -125,7 +125,7 @@ var Course = (function(){
 		var ret = true;
 		for (var i in obj1) {
 			if (obj1.hasOwnProperty(i))
-				if (!obj2.hasOwnProperty(i)) return false;
+				if (!obj2 || !obj2.hasOwnProperty(i)) return false;
 				if (typeof obj1[i] == "object" && obj1[i]!=null)
 					ret |= objectsEquals(obj1[i], obj2[i]);
 				else
@@ -141,9 +141,14 @@ var Course = (function(){
 		var info ='expected <code>' + (t.outDesc ? t.outDesc : toString(t.out)) + '</code>, found <code>'+toString(ret)+'</code>';
 		var extraInfo = "";
 		// throws
-		if (t.throws && typeof ret == "object" && "throwed" in ret) {
-			comparison = t.throws === ret.throwed;
-			if (!comparison) info = " Throwed exception mismatch, expected throwed string: <code>"+t.throws+"</code>, found <code>"+ret.throwed+"</code>."
+		if (t.throws) {
+			if (typeof ret == "object" && ret != null && "throwed" in ret) {
+				comparison = t.throws === ret.throwed;
+				if (!comparison) info = " Throwed exception mismatch, expected throwed string: <code>"+t.throws+"</code>, found <code>"+ret.throwed+"</code>.";
+			} else {
+				comparison = false;
+				info = "Function should throw an error "+t.throws+".";
+			}
 		// check function
 		} else if (typeof t.check == 'function') {
 			var checkRet = t.check(ret);
@@ -160,11 +165,14 @@ var Course = (function(){
 			}
 		// array
 		} else if (Array.isArray(t.out)) {
-			if (!Array.isArray(ret) || ret.length != t.out.length) { 
-				extraInfo += " (incorrect length of array: <code>"+ret.length+"</code>, expected <code>"+t.out.length+"</code>)";
+			if (!Array.isArray(ret)) { 
+				extraInfo += " (function didn't return array)";
 				comparison = false;
 			}
-			else {
+			else if(ret.length != t.out.length) {
+				extraInfo += " (incorrect length of array: <code>"+ret.length+"</code>, expected <code>"+t.out.length+"</code>)";
+				comparison = false;
+			}else {
 				for(var i=0; i<ret.length;i++) {
 					comparison &= (ret[i] === t.out[i] || (typeof ret[i] == "number" && typeof t.out[i] == "number"  && isNaN(ret[i]) && isNaN(t.out[i])));
 					if (!comparison) {
@@ -212,7 +220,7 @@ var Course = (function(){
 					var ret;
 					try {
 						ret = desc.func.apply(null, t.in);
-						if (ret === null) ret = "null";
+						// if (ret === null) ret = "null";
 					} catch (e) { ret = e; }
 					checkRet(ret, t, $statusObj);
 					clearTestBtn($statusObj);
@@ -347,6 +355,7 @@ var Course = (function(){
 		scriptElm.id = file;
 		scriptElm.src = PATH + file + ".js";
 		loadingStatus = scriptElm.src;
+		// console.log("load",loadingStatus); return;
 		scriptElm.onerror = function(a,b,c) {
 			cntMsg("Error, cannot load file: <code>" + scriptElm.src + '</code>', "danger");
 			loadingStatus = false;

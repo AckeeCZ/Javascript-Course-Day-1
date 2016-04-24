@@ -29,14 +29,16 @@ Course.registerTest({
 	bonusTests: [
 		{ in: [ bigArrSize ], outDesc: "array of length "+bigArrSize+" containing [1,2,...,"+bigArrSize+"].",
 			check: function(arr){
-			var ret = arr.length == bigArrSize;
-			if (!ret) return {ret: false, mess: "Incorrect length ("+arr.length+"), expected: "+bigArrSize};
-			for(var i=0;i<20;i++){
-				var ind = Math.floor(Math.random() * bigArrSize);
-				if (arr[ind] != (ind+1)) return { ret:false, mess:"Invalid value on index "+ind+". Found "+arr[ind]+", expected "+(ind+1)+"."};
+				if (!arr) return {ret: false, mess: "Function did not return array."};
+				var ret = (arr && arr.length == bigArrSize);
+				if (!ret) return {ret: false, mess: "Incorrect length ("+arr.length+"), expected: "+bigArrSize};
+				for(var i=0;i<20;i++){
+					var ind = Math.floor(Math.random() * bigArrSize);
+					if (arr[ind] != (ind+1)) return { ret:false, mess:"Invalid value on index "+ind+". Found "+arr[ind]+", expected "+(ind+1)+"."};
+				}
+				return {ret:true};
 			}
-			return {ret:true};
-		} },
+		},
 		{ in: [ (1<<30)*4 ], throws: "Num too big" },
 		{ in: [ -1*((1<<30)*4) + 2 ], throws: "Num too big" },
 		{ in: [ null ], throws: "Invalid num" },

@@ -14,6 +14,7 @@ function arrCopy(arr) {
 // DON'T CHANGE THIS
 // you can take a look at input and expected output of test
 function checkEq(arr1, arr2) {
+	if (!arr1 || !arr2) return false;
 	if (arr1.length != arr2.length) return false;
 	for(var i=0;i<arr1.length;i++) {
 		if (!(arr1[i] === arr2[i] || (typeof arr1[i] == 'number' && typeof arr2[i] == 'number' && isNaN(arr1[i]) && isNaN(arr2[i])))) return false
