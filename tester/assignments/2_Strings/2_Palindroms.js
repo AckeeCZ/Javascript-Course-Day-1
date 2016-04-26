@@ -10,7 +10,8 @@
 
 
 function isPalindrom(str) {
-	return null;
+	str = str.toLowerCase();
+	return ((str.substr(0,str.length/2+1)).toLowerCase().split("").reverse().join("") == (str.substr(str.length/2,str.length)).toLowerCase()) ? true : false;
 }
 
 // DON'T CHANGE THIS

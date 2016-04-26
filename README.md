@@ -2,7 +2,7 @@
 
 ## Tools
 ## Data types
-## Operators _JB_
-## Control flow _JB_
+## Operators
+## Control flow
 ## DOM
 ## jQuery

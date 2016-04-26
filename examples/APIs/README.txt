@@ -1,6 +1,6 @@
 This task will be about javascript APIs
 
-Look at my sreen with wanted solution
+Look at my screen with wanted solution
 Use information and examples you've just learned
 
 DO NOT any changes in file "index.html"

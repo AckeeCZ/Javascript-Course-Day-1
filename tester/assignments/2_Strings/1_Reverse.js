@@ -7,7 +7,8 @@
  */
 
 function reverseStrings(arr) {
-	return null;
+
+	return arr.reverse();
 }
 
 // DON'T CHANGE THIS
